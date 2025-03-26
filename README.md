@@ -1,9 +1,5 @@
-# WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
-## Running the Project
-`npm run start` — to launch the server 
+# WTWR (What to Wear?) | Back End
 
-`npm run dev` — to launch the server with the hot reload feature
+This [project] (https://kimyonsoo.github.io/se_project_express/) is the 5th project of the Software Engineering program at TripleTen. The WTWR application is a real time weather based app built with React and Express to provide a day to day garment gudiance based on user's location. 
 
-### Testing
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+The frontend portion of it wass created using JSX, HTML and CSS, based on the design brief given on [Figma] (https://www.figma.com/design/F03bTb81Pw8IDPj5Y9rc5i/Sprint-10-%7C-WTWR?node-id=548-113&node-type=frame&t=VRVC89xFY7PWNE1S-0), The application utilizes an API collecting the weather data on daily basis to process what would be suitable for wearing based on the location and climate of a user. The backend part was focused on creating a server the WTWR application in order to manage user requests using Node and Express. 
