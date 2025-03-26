@@ -13,7 +13,9 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server. " });
     });
 };
 
@@ -23,35 +25,38 @@ const getItems = (req, res) => {
       res.status(200).send(items);
     })
     .catch((err) => {
-      res.status(SERVER_ERROR).send({ message: err.message });
-    });
-};
-
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
-
-  ClothingItem.findByIdAndUpdate(
-    itemId,
-    { $set: { imageUrl } },
-    { new: true, runValidators: true }
-  )
-    .orFail(() => {
-      const error = new Error("Item ID not found");
-      error.statusCode = NOT_FOUND;
-      throw error;
-    })
-    .then((item) => res.status(200).send({ data: item }))
-    .catch((err) => {
       console.error(err);
-      if (err.statusCode === NOT_FOUND) {
-        return res.status(NOT_FOUND).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
-      }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server. " });
     });
 };
+
+// const updateItem = (req, res) => {
+//   const { itemId } = req.params;
+//   const { imageUrl } = req.body;
+
+//   ClothingItem.findByIdAndUpdate(
+//     itemId,
+//     { $set: { imageUrl } },
+//     { new: true, runValidators: true }
+//   )
+//     .orFail(() => {
+//       const error = new Error("Item ID not found");
+//       error.statusCode = NOT_FOUND;
+//       throw error;
+//     })
+//     .then((item) => res.status(200).send({ data: item }))
+//     .catch((err) => {
+//       console.error(err);
+//       if (err.statusCode === NOT_FOUND) {
+//         return res.status(NOT_FOUND).send({ message: err.message });
+//       } else if (err.name === "CastError") {
+//         return res.status(BAD_REQUEST).send({ message: err.message });
+//       }
+//       return res.status(SERVER_ERROR).send({ message: "An error has occurred on the server. " });
+//     });
+// };
 
 const updateLike = (req, res, method) => {
   const {
@@ -72,10 +77,13 @@ const updateLike = (req, res, method) => {
       console.error(err);
       if (err.statusCode === NOT_FOUND) {
         return res.status(NOT_FOUND).send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server. " });
     });
 };
 
@@ -102,15 +110,17 @@ const deleteItem = (req, res) => {
       console.error(err);
       if (err.statusCode === NOT_FOUND) {
         return res.status(NOT_FOUND).send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server. " });
     });
 };
 
 module.exports = {
-  updateItem,
   getItems,
   createItem,
   likeItem,
@@ -118,4 +128,4 @@ module.exports = {
   deleteItem,
 };
 
-//up to date
+// up to date
