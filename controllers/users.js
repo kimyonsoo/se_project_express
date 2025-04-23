@@ -133,4 +133,4 @@ const modifyUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getCurrentUser, postUser, login };
+module.exports = { getUsers, getCurrentUser, postUser, login, modifyUser };
