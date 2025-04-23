@@ -37,14 +37,16 @@ const postUser = (req, res) => {
         password: hash,
       })
     )
-    .then((user) =>
+    .then((user) => {
+      delete user.password;
+
       res.status(201).send({
         _id: user._id,
         name: user.name,
         avatar: user.avatar,
         email: user.email,
-      })
-    )
+      });
+    })
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });

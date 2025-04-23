@@ -1,5 +1,10 @@
 const ClothingItem = require("../models/clothingitem");
-const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  SERVER_ERROR,
+  FORBIDDEN,
+} = require("../utils/errors");
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -105,9 +110,16 @@ const deleteItem = (req, res) => {
       error.statusCode = NOT_FOUND;
       throw error;
     })
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => {
+      if (item.owner === req.user._id) {
+        return item.deleteOne();
+      }
+    })
     .catch((err) => {
       console.error(err);
+      if (err.name === "ForbiddenError") {
+        return res.status(FORBIDDEN).send({ message: err.message });
+      }
       if (err.statusCode === NOT_FOUND) {
         return res.status(NOT_FOUND).send({ message: err.message });
       }

@@ -5,4 +5,5 @@ module.exports = {
   DUPLICATE_KEY: 11000,
   CONFLICT: 409,
   UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
 };
