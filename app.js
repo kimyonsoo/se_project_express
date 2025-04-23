@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 
 const app = express();
-const cors = requrie("cors");
+const cors = require("cors");
 // if there's a port in process.env, then use it. If not, use the default value of 3001
 const { PORT = 3001 } = process.env;
 
