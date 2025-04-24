@@ -1,17 +1,16 @@
 // Middleware functions allow us to write our request processing code inside
 // a separate module, which in turn allows for shorter code in the router itself
 // It is a great place to move code that will be repeatedly executed
+const jwt = require("jsonwebtoken");
+
 const { UNAUTHORIZED } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
-const jwt = require("jsonwebtoken");
 
 const handleAuthError = (res) => {
   res.status(UNAUTHORIZED).send("Unauthorized");
 };
 
-const extractBearerToken = (header) => {
-  return header.replace("Bearer ", "");
-};
+const extractBearerToken = (header) => header.replace("Bearer ", "");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -31,4 +30,6 @@ module.exports = (req, res, next) => {
 
   req.user = payload;
   next();
+
+  return null;
 };

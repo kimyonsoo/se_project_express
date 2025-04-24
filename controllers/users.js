@@ -1,4 +1,6 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 const User = require("../models/user");
 const {
   BAD_REQUEST,
@@ -8,22 +10,7 @@ const {
   CONFLICT,
   UNAUTHORIZED,
 } = require("../utils/errors");
-const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-
-// GET /users
-
-const getUsers = (req, res) => {
-  console.log("IN CONTROLLER");
-  User.find({})
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(SERVER_ERROR).send({ message: err.message });
-    });
-};
 
 const postUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -61,11 +48,6 @@ const getCurrentUser = (req, res) => {
   const userId = req.user._id;
   User.findById(userId)
     .orFail()
-    // .orFail(() => {
-    //   const error = new Error("User ID not found");
-    //   error.statusCode = NOT_FOUND;
-    //   throw error;
-    // })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
@@ -99,7 +81,6 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      //if email and password are incorrect,
       if (err.message === "Incorrect email or password") {
         return res.status(UNAUTHORIZED).send({ message: err.message });
       }
@@ -135,4 +116,4 @@ const modifyUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getCurrentUser, postUser, login, modifyUser };
+module.exports = { getCurrentUser, postUser, login, modifyUser };

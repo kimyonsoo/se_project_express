@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const indexRouter = require("./routes/index");
 
 const app = express();
-const cors = require("cors");
 // if there's a port in process.env, then use it. If not, use the default value of 3001
 const { PORT = 3001 } = process.env;
 
@@ -14,18 +14,10 @@ mongoose
   })
   .catch(console.error);
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: "5d8b8592978f8bd833ca8133", // paste the _id of the test user created in the previous step
-//   };
-//   next();
-// });
-
+app.use(cors());
 app.use(express.json());
 app.use("/", indexRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
-
-app.use(cors());
