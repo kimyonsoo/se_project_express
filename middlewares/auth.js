@@ -3,9 +3,10 @@
 // It is a great place to move code that will be repeatedly executed
 const { UNAUTHORIZED } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
+const jwt = require("jsonwebtoken");
 
 const handleAuthError = (res) => {
-  res.status(UNAUTHORIZED).send({ message: err.message });
+  res.status(UNAUTHORIZED).send("Unauthorized");
 };
 
 const extractBearerToken = (header) => {
@@ -14,8 +15,9 @@ const extractBearerToken = (header) => {
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(authorization);
 
-  if (!authorization || !authorization.startsWith("Bearer")) {
+  if (!authorization || !authorization.startsWith("Bearer ")) {
     return handleAuthError(res);
   }
   const token = extractBearerToken(authorization);

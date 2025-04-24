@@ -27,6 +27,7 @@ const getUsers = (req, res) => {
 
 const postUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
+
   bcrypt
     .hash(password, 10)
     .then((hash) =>
@@ -38,8 +39,6 @@ const postUser = (req, res) => {
       })
     )
     .then((user) => {
-      delete user.password;
-
       res.status(201).send({
         _id: user._id,
         name: user.name,
@@ -52,20 +51,21 @@ const postUser = (req, res) => {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
       if (err.code === DUPLICATE_KEY) {
-        return res.status(CONFLICT).send({ message: err.message });
+        return res.status(CONFLICT).send({ message: "Email already exists" });
       }
       return res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   User.findById(userId)
-    .orFail(() => {
-      const error = new Error("User ID not found");
-      error.statusCode = NOT_FOUND;
-      throw error;
-    })
+    .orFail()
+    // .orFail(() => {
+    //   const error = new Error("User ID not found");
+    //   error.statusCode = NOT_FOUND;
+    //   throw error;
+    // })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
@@ -75,7 +75,6 @@ const getCurrentUser = (req, res) => {
       if (err.statusCode === NOT_FOUND) {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server. " });
@@ -84,6 +83,13 @@ const getCurrentUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(BAD_REQUEST).send({
+      message: "Email and password are required fields",
+    });
+  }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -102,18 +108,14 @@ const login = (req, res) => {
 };
 
 const modifyUser = (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
     userId,
     { name, avatar },
     { new: true, runValidators: true }
   )
-    .orFail(() => {
-      const error = new Error("User ID not found");
-      error.statusCode = NOT_FOUND;
-      throw error;
-    })
+    .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
