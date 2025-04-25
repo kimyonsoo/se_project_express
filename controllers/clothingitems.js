@@ -88,12 +88,13 @@ const deleteItem = (req, res) => {
       error.statusCode = FORBIDDEN;
       throw error;
     })
+    .then(() => res.send({ message: "The item is deleted successfully" }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "ForbiddenError") {
+      if (err.statusCode === FORBIDDEN) {
         return res.status(FORBIDDEN).send({ message: err.message });
       }
-      if (err.statusCode === NOT_FOUND) {
+      if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
       if (err.name === "CastError") {
